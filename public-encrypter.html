@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔐 Public Text Encryption Tool</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #fff;
+      margin: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 255, 231, 0.2);
+    }
+    h2 {
+      text-align: center;
+      color: #00ffe7;
+      margin-bottom: 10px;
+    }
+    .disclaimer {
+      text-align: center;
+      color: #ff4444;
+      font-size: 0.9em;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: #2c2c2c;
+      border-radius: 5px;
+    }
+    textarea, input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: none;
+      background: #2c2c2c;
+      color: #fff;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 5px 0;
+      border: none;
+      background: #00ffe7;
+      color: #000;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #00d1c1;
+    }
+    .mute-btn {
+      background: #ff4444;
+      margin-left: 10px;
+    }
+    .mute-btn.muted {
+      background: #666;
+    }
+    .mute-btn:hover {
+      background: #cc3333;
+    }
+    .mute-btn.muted:hover {
+      background: #555;
+    }
+    .error {
+      color: #ff4444;
+      display: none;
+      margin-bottom: 10px;
+    }
+    .section {
+      margin-top: 40px;
+      border-top: 1px solid #444;
+      padding-top: 20px;
+    }
+    .result-box {
+      padding: 10px;
+      background: #222;
+      word-break: break-all;
+      min-height: 40px;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    label {
+      margin: 5px 0;
+      display: inline-block;
+    }
+    .header-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .tab-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .tab {
+      padding: 10px 20px;
+      background: #2c2c2c;
+      color: #fff;
+      border: none;
+      border-radius: 5px 5px 0 0;
+      cursor: pointer;
+      margin: 0 5px;
+      font-weight: bold;
+    }
+    .tab.active {
+      background: #00ffe7;
+      color: #000;
+    }
+    .tab:hover {
+      background: #00d1c1;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+     .k.ehbm {
+    font-family: auto;
+    font-size: 70px;
+    position: absolute;
+    text-transform: uppercase;
+    text-align: center;
+    background: linear-gradient(
+        to right,
+        #fc72ff, /* Pink */
+        #8f68ff, /* Purple */
+        #487bff, /* Blue */
+        #fc72ff,  /* Pink */
+        #00d1ff, /* Cyan */
+        #8f68ff, /* Purple */
+        #fc72ff  /* Pink */
+    );
+    background-size: 400%; /* Increased for smoother animation */
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: animate-gradient 20s linear infinite; /* Adjusted duration */
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+@keyframes animate-gradient {
+    0% {
+        background-position: 0%; /* Start from the left */
+    }
+    100% {
+        background-position: 400%; /* Move to the right */
+    }
+}
+
+#container2 {
+    
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;    /* Center vertically */
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 50px;
+    height: 75px;
+    background-color: rgb(63, 253, 63);
+    border-radius: 40px;
+    box-shadow: 0 0 150px #1d8aff;            
+    border-style: solid;
+    border-color: #5ba8fc;
+    border-width: 1px;
+}
+
+/* K.HBM main css heading */
+#start-btn {
+    position: static;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    margin: auto;
+  }
+
+  </style>
+</head>
+<body>
+  
+  <div id="container2" >
+    <button  id="start-btn" class="k ehbm">K.EHBM</button>
+</div>
+<br>
+  <div class="container">
+    <div class="header-controls">
+      <h2>🔐 Public Text Encryption Tool</h2>
+      
+    </div>
+    <div class="disclaimer">
+      <strong>Security Notice:</strong> This tool is for educational purposes only. Do not use generated keys for sensitive accounts. We are not responsible for any data loss or security issues arising from the use of this tool.
+    </div>
+
+    <!-- Tabs -->
+    <div class="tab-container">
+      <button id="muteBtn" class="mute-btn">Mute</button>
+      <button class="tab active" data-tab="encryptTab">Encrypt</button>
+      <button class="tab" data-tab="decryptTab">Decrypt</button>
+    </div>
+
+    <!-- Encryption Tab -->
+    <div id="encryptTab" class="tab-content active">
+      <div class="section">
+        <h3>Encrypt Text</h3>
+        <textarea id="encryptInput" placeholder="Enter text to encrypt" rows="4"></textarea>
+        <input type="text" id="encryptKey" placeholder="Enter key or generate one below">
+        <div id="encryptError" class="error">Error here</div>
+        <button id="encryptBtn">Encrypt</button>
+        <button id="copyEncrypt">Copy Encrypted Text</button>
+        <button id="encryptGenerateKey">Generate Key</button>
+        <button id="copyEncryptKey">Copy Key</button>
+        <h4>Encrypted Output:</h4>
+        <div class="result-box" id="encryptOutput"></div>
+      </div>
+
+      <!-- Key Generator in Encrypt Tab -->
+      <div class="section">
+        <h3>🔑 Key Generator</h3>
+        <label>Key Length:
+          <input type="number" id="encryptKeyLength" min="8" max="32" value="16">
+        </label><br>
+        <label><input type="checkbox" id="encryptIncludeLower" checked> Lowercase</label><br>
+        <label><input type="checkbox" id="encryptIncludeUpper" checked> Uppercase</label><br>
+        <label><input type="checkbox" id="encryptIncludeNumber" checked> Numbers</label><br>
+        <label><input type="checkbox" id="encryptIncludeSymbol" checked> Symbols</label><br><br>
+        <div class="result-box" id="encryptResult"></div>
+      </div>
+    </div>
+
+    <!-- Decryption Tab -->
+    <div id="decryptTab" class="tab-content">
+      <div class="section">
+        <h3>Decrypt Text</h3>
+        <textarea id="decryptInput" placeholder="Enter text to decrypt" rows="4"></textarea>
+        <input type="text" id="decryptKey" placeholder="Enter decryption key or generate one below">
+        <div id="decryptError" class="error">Error here</div>
+        <button id="decryptBtn">Decrypt</button>
+        <button id="copyDecrypt">Copy Decrypted Text</button>
+        <button id="decryptGenerateKey">Generate Key</button>
+        <button id="copyDecryptKey">Copy Key</button>
+        <h4>Decrypted Output:</h4>
+        <div class="result-box" id="decryptOutput"></div>
+      </div>
+
+      <!-- Key Generator in Decrypt Tab -->
+      <div class="section">
+        <h3>🔑 Key Generator</h3>
+        <label>Key Length:
+          <input type="number" id="decryptKeyLength" min="8" max="32" value="16">
+        </label><br>
+        <label><input type="checkbox" id="decryptIncludeLower" checked> Lowercase</label><br>
+        <label><input type="checkbox" id="decryptIncludeUpper" checked> Uppercase</label><br>
+        <label><input type="checkbox" id="decryptIncludeNumber" checked> Numbers</label><br>
+        <label><input type="checkbox" id="decryptIncludeSymbol" checked> Symbols</label><br><br>
+        <div class="result-box" id="decryptResult"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Element references
+    const encryptBtn = document.getElementById('encryptBtn');
+    const copyEncrypt = document.getElementById('copyEncrypt');
+    const decryptBtn = document.getElementById('decryptBtn');
+    const copyDecrypt = document.getElementById('copyDecrypt');
+    const encryptGenerateBtn = document.getElementById('encryptGenerateKey');
+    const decryptGenerateBtn = document.getElementById('decryptGenerateKey');
+    const copyEncryptKey = document.getElementById('copyEncryptKey');
+    const copyDecryptKey = document.getElementById('copyDecryptKey');
+    const muteBtn = document.getElementById('muteBtn');
+    const encryptInput = document.getElementById('encryptInput');
+    const encryptKey = document.getElementById('encryptKey');
+    const encryptError = document.getElementById('encryptError');
+    const decryptInput = document.getElementById('decryptInput');
+    const decryptKey = document.getElementById('decryptKey');
+    const decryptError = document.getElementById('decryptError');
+    const encryptOutput = document.getElementById('encryptOutput');
+    const decryptOutput = document.getElementById('decryptOutput');
+    const encryptResult = document.getElementById('encryptResult');
+    const decryptResult = document.getElementById('decryptResult');
+
+    // Mute state
+    let isMuted = false;
+
+    // Tab switching
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+        speak('Switched to ' + tab.textContent + ' tab.');
+      });
+    });
+
+    // Mute button toggle
+    muteBtn.addEventListener('click', () => {
+      isMuted = !isMuted;
+      muteBtn.textContent = isMuted ? 'Unmute' : 'Mute';
+      muteBtn.classList.toggle('muted', isMuted);
+      if (isMuted) {
+        window.speechSynthesis.cancel(); // Stop any ongoing speech
+        speak('Audio muted.');
+      } else {
+        speak('Audio unmuted.');
+      }
+    });
+
+    // Encryption with auto-copy
+    encryptBtn.addEventListener('click', () => {
+      const text = encryptInput.value.trim();
+      const key = encryptKey.value.trim();
+      encryptError.style.display = 'none';
+
+      if (!text || !key) {
+        encryptError.textContent = 'Please enter text and a key.';
+        encryptError.style.display = 'block';
+        speak('Please enter text and a key.');
+        return;
+      }
+
+      try {
+        const encrypted = CryptoJS.AES.encrypt(text, key).toString();
+        encryptOutput.textContent = encrypted;
+        // Auto-copy to clipboard
+        navigator.clipboard.writeText(encrypted).then(() => {
+          speak('Text encrypted and copied to clipboard.');
+        }).catch(() => {
+          speak('Text encrypted, but clipboard copy failed.');
+        });
+      } catch {
+        encryptError.textContent = 'Encryption failed.';
+        encryptError.style.display = 'block';
+        speak('Encryption failed.');
+      }
+    });
+
+    // Decryption
+    decryptBtn.addEventListener('click', () => {
+      const text = decryptInput.value.trim();
+      const key = decryptKey.value.trim();
+      decryptError.style.display = 'none';
+
+      if (!text || !key) {
+        decryptError.textContent = 'Please enter both text and key.';
+        decryptError.style.display = 'block';
+        speak('Please enter both text and key.');
+        return;
+      }
+
+      try {
+        const decrypted = CryptoJS.AES.decrypt(text, key).toString(CryptoJS.enc.Utf8);
+        if (!decrypted) throw new Error();
+        decryptOutput.textContent = decrypted;
+        speak('Text decrypted successfully.');
+      } catch {
+        decryptError.textContent = 'Decryption failed. Check your text or key.';
+        decryptError.style.display = 'block';
+        speak('Decryption failed.');
+      }
+    });
+
+    // Copy buttons for encrypted/decrypted text
+    copyEncrypt.addEventListener('click', () => {
+      if (encryptOutput.textContent) {
+        navigator.clipboard.writeText(encryptOutput.textContent);
+        speak('Encrypted text copied.');
+      }
+    });
+
+    copyDecrypt.addEventListener('click', () => {
+      if (decryptOutput.textContent) {
+        navigator.clipboard.writeText(decryptOutput.textContent);
+        speak('Decrypted text copied.');
+      }
+    });
+
+    // Copy buttons for keys
+    copyEncryptKey.addEventListener('click', () => {
+      if (encryptKey.value) {
+        navigator.clipboard.writeText(encryptKey.value);
+        speak('Key copied.');
+      }
+    });
+
+    copyDecryptKey.addEventListener('click', () => {
+      if (decryptKey.value) {
+        navigator.clipboard.writeText(decryptKey.value);
+        speak('Key copied.');
+      }
+    });
+
+    // Key generator for Encrypt tab
+    encryptGenerateBtn.addEventListener('click', () => {
+      const length = +document.getElementById('encryptKeyLength').value;
+      const hasLower = document.getElementById('encryptIncludeLower').checked;
+      const hasUpper = document.getElementById('encryptIncludeUpper').checked;
+      const hasNumber = document.getElementById('encryptIncludeNumber').checked;
+      const hasSymbol = document.getElementById('encryptIncludeSymbol').checked;
+
+      if (!hasLower && !hasUpper && !hasNumber && !hasSymbol) {
+        encryptResult.textContent = 'Please select at least one character type.';
+        speak('Please select at least one character type.');
+        return;
+      }
+
+      const key = generateKey(length, hasLower, hasUpper, hasNumber, hasSymbol);
+      encryptResult.textContent = key;
+      encryptKey.value = key; // Automatically set as encryption key
+      speak('Key generated and set as encryption key.');
+    });
+
+    // Key generator for Decrypt tab
+    decryptGenerateBtn.addEventListener('click', () => {
+      const length = +document.getElementById('decryptKeyLength').value;
+      const hasLower = document.getElementById('decryptIncludeLower').checked;
+      const hasUpper = document.getElementById('decryptIncludeUpper').checked;
+      const hasNumber = document.getElementById('decryptIncludeNumber').checked;
+      const hasSymbol = document.getElementById('decryptIncludeSymbol').checked;
+
+      if (!hasLower && !hasUpper && !hasNumber && !hasSymbol) {
+        decryptResult.textContent = 'Please select at least one character type.';
+        speak('Please select at least one character type.');
+        return;
+      }
+
+      const key = generateKey(length, hasLower, hasUpper, hasNumber, hasSymbol);
+      decryptResult.textContent = key;
+      decryptKey.value = key; // Automatically set as decryption key
+      speak('Key generated and set as decryption key.');
+    });
+
+    function generateKey(length, lower, upper, number, symbol) {
+      const randomFunc = {
+        lower: () => String.fromCharCode(Math.floor(Math.random() * 26) + 97),
+        upper: () => String.fromCharCode(Math.floor(Math.random() * 26) + 65),
+        number: () => String.fromCharCode(Math.floor(Math.random() * 10) + 48),
+        symbol: () => '~!@#$%^&*()_+{}[]<>/?,.|='.charAt(Math.floor(Math.random() * 22)),
+      };
+
+      let generated = '';
+      const types = { lower, upper, number, symbol };
+      const typeArr = Object.entries(types).filter(([k, v]) => v);
+
+      if (typeArr.length === 0) return '';
+
+      while (generated.length < length) {
+        for (const [type] of typeArr) {
+          generated += randomFunc[type]();
+          if (generated.length >= length) break;
+        }
+      }
+
+      return generated.split('').sort(() => Math.random() - 0.5).join('');
+    }
+
+    function speak(text) {
+      if (isMuted || !window.speechSynthesis) return;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1;
+      window.speechSynthesis.speak(utterance);
+    }
+  </script>
+</body>
+</html>
